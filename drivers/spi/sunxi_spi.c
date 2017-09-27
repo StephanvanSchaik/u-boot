@@ -254,10 +254,11 @@ static int sunxi_spi_xfer(struct udevice *dev, unsigned int bitlen,
 		sunxi_spi_cs_activate(dev, slave_plat->cs);
 
 	while (len) {
-		nbytes = min(len, (size_t)64 - 1);
+		nbytes = min(len, (size_t) 64);
 
 		writel(SUNXI_SPI_BURST_CNT(nbytes), &priv->regs->burst_cnt);
 		sunxi_spi_write(dev, tx_buf, nbytes);
+		tx_buf += nbytes;
 		setbits_le32(&priv->regs->xfer_ctl, SUNXI_SPI_CTL_XCH);
 
 		while (((readl(&priv->regs->fifo_sta) &
